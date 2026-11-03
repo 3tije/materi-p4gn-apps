@@ -10,6 +10,7 @@ function doGet(e) {
     if (action === "ping") payload = {ok:true, service:"P4GN Material Intelligence"};
     else if (action === "bootstrap") payload = {ok:true, modules:getModules()};
     else if (action === "detail") payload = {ok:true, references:getReferences(String(p.code || ""))};
+    else if (action === "health") payload = getHealth_();
     else payload = {ok:false, error:"Permintaan tidak dikenali."};
   } catch (err) {
     payload = {ok:false, error:String(err && err.message ? err.message : err)};
@@ -37,6 +38,9 @@ function getModules() {
   const values = getSheet_(SHEET_BANK).getDataRange().getDisplayValues();
   if (values.length < 2) return [];
   const h = headerMap_(values[0]);
+  if (h["Kode Materi"] === undefined || h["Dimensi/Kandidat Judul Materi"] === undefined) {
+    throw new Error("Struktur kolom Bank_Materi_60 tidak sesuai dengan database materi.");
+  }
   const grouped = {};
   values.slice(1).forEach(row => {
     const code = cell_(row,h,"Kode Materi");
@@ -67,6 +71,9 @@ function getReferences(code) {
   const values = getSheet_(SHEET_MATRIX).getDataRange().getDisplayValues();
   if (values.length < 2) return [];
   const h = headerMap_(values[0]);
+  if (h["Kode Materi"] === undefined || h["Poin Detail"] === undefined) {
+    throw new Error("Struktur kolom Matriks_Analisis tidak sesuai dengan database referensi.");
+  }
   const result = [];
   values.slice(1).forEach(row => {
     if (cell_(row,h,"Kode Materi") !== code) return;
@@ -100,4 +107,17 @@ function testConnection() {
   Logger.log("Jumlah modul: " + modules.length);
   Logger.log("Contoh: " + JSON.stringify(modules[0] || {}));
   return modules.length;
+}
+
+function getHealth_() {
+  const modules = getModules();
+  const matrix = getSheet_(SHEET_MATRIX).getDataRange().getDisplayValues();
+  return {
+    ok: true,
+    service: "P4GN Material Intelligence",
+    moduleCount: modules.length,
+    referenceRows: Math.max(0, matrix.length - 1),
+    expectedModules: 43,
+    ready: modules.length > 0
+  };
 }

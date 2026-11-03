@@ -23,12 +23,11 @@ footer{max-width:1180px;margin:auto;padding:0 18px 28px;color:#7b8794;font-size:
 </head>
 <body>
 <header><div class="hero">
-<div class="brand-logo"><img src="assets/logo-bnn.png" alt="Logo BNN"></div>
+<div class="brand-logo"><img src="assets/logo-bnn.webp" alt="Logo BNN"></div>
 <div class="hero-copy"><div class="brand">Direktorat Informasi & Edukasi · BNN RI</div><h1>P4GN Material Intelligence</h1><p>Context-Based Prevention & Education System — merancang penyuluhan berdasarkan segmen, situasi, tujuan perubahan, dan durasi.</p><a class="pena-link" href="https://pena.mytije.com" target="_blank" rel="noopener">pena.mytije.com ↗</a></div>
-<div class="brand-logo"><img src="assets/logo-ananda.png" alt="Logo Ananda Bersinar"></div>
+<div class="brand-logo"><img src="assets/logo-ananda.webp" alt="Logo Ananda Bersinar"></div>
 </div></header>
 <main>
-<div class="notice"><b>Catatan penggunaan:</b> rekomendasi konteks pada versi ini masih berupa alat bantu pencarian dan penyusunan. Kecocokan modul, status evidence, data, dan regulasi tetap perlu divalidasi sebelum materi digunakan.</div>
 <div class="tabs">
 <button class="tab active" data-tab="builder">Rancang Penyuluhan</button><button class="tab" data-tab="bank">Bank Materi</button><button class="tab" data-tab="guide">Panduan Penyuluh</button><button class="tab" data-tab="ai">AI Slide Studio</button>
 </div>
@@ -54,7 +53,7 @@ footer{max-width:1180px;margin:auto;padding:0 18px 28px;color:#7b8794;font-size:
 <div id="selectedList" class="selected-list"><div class="empty">Belum ada modul dipilih.</div></div>
 <div class="field" style="margin-top:16px"><label for="titleOverride">Judul penyuluhan (opsional)</label><input id="titleOverride" placeholder="Judul akan disarankan otomatis"></div>
 <button class="btn teal" id="makePlan" style="width:100%">Susun rancangan penyuluhan</button>
-<p class="small muted">Pilih modul secara manual. Penandaan otomatis berdasarkan konteks baru diaktifkan setelah tag setiap materi divalidasi.</p>
+<p class="small muted">Pilih modul yang paling sesuai dengan sasaran, situasi, dan tujuan kegiatan.</p>
 </div>
 </div>
 <div class="card" style="margin-top:16px"><h2>Hasil rancangan</h2><div id="planOutput" class="output">Hasil rancangan akan muncul di sini setelah Anda memilih modul dan menekan “Susun rancangan penyuluhan”.</div></div>
@@ -75,7 +74,7 @@ footer{max-width:1180px;margin:auto;padding:0 18px 28px;color:#7b8794;font-size:
 </main>
 <footer>P4GN Material Intelligence · Direktorat Informasi & Edukasi – BNN RI</footer>
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbx3Rz59wrVXCYLOpPlLpwBC1Jhyz7QEKmnGiZ7OLDswzPwdG9-jnUdvx-jwqvdp0Xzzxw/exec";
+const API_URL = "GANTI_DENGAN_URL_WEB_APP_APPS_SCRIPT";
 let modules=[], selected=new Set(), lastPlan="";
 const $=id=>document.getElementById(id);
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
@@ -109,8 +108,8 @@ async function loadData(){
  }catch(e){
    console.error("P4GN Material Intelligence data load:",e);
    modules=[]; renderAll();
-   $("builderMaterials").innerHTML='<div class="empty">Materi belum dapat dimuat. Silakan muat ulang halaman.</div>';
-   $("bankMaterials").innerHTML='<div class="empty">Materi belum dapat dimuat. Silakan muat ulang halaman.</div>';
+   $("builderMaterials").innerHTML='<div class="empty">Bank materi sedang tidak dapat diakses. Silakan coba kembali beberapa saat lagi.</div>';
+   $("bankMaterials").innerHTML='<div class="empty">Bank materi sedang tidak dapat diakses. Silakan coba kembali beberapa saat lagi.</div>';
  }
 }
 async function ensureReferences(ms){

@@ -1,4 +1,4 @@
-# P4GN Material Intelligence v0.2
+# P4GN Material Intelligence v0.3
 
 ## Pembaruan
 - Logo BNN di kiri dan Ananda Bersinar di kanan header.
@@ -36,3 +36,12 @@
 - Katalog ringkas dan referensi modul diambil terpisah untuk mencegah satu respons membengkak.
 - Jika kode Apps Script diubah, buat deployment versi baru atau edit deployment aktif ke versi terbaru.
 - File paket ini belum dapat mengisi URL deployment dan ID spreadsheet milik pengguna. Integrasi final baru terverifikasi setelah kedua nilai tersebut dipasang dan API diuji.
+
+## Uji kesehatan koneksi (setelah deployment)
+- `/exec?action=health` → menampilkan jumlah modul dan baris referensi tanpa mengirim seluruh isi database.
+- Target `moduleCount`: 43.
+- `/exec?action=bootstrap` → mengirim katalog ringkas untuk aplikasi.
+- `/exec?action=detail&code=M01` → mengambil jejak referensi satu modul.
+
+## Catatan penting
+Jika aplikasi lama menampilkan error `Argumen terlalu besar: value`, ganti kode Apps Script lama dengan `Code.gs` pada paket ini lalu deploy versi baru. Kode baru tidak menyimpan seluruh payload katalog ke Script Properties/Cache; katalog dan detail referensi dikirim melalui endpoint terpisah.
