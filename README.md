@@ -1,41 +1,37 @@
-# P4GN Material Intelligence v0.5
+# P4GN Material Intelligence v0.5.1
 
 ## Fokus pembaruan
-- Rancang Penyuluhan: konteks kegiatan diisi lebih dahulu, lalu tombol **Cari modul terkait**.
-- Rekomendasi otomatis hanya mengambil baris pemetaan berstatus `DISETUJUI`; jika belum ada pemetaan, aplikasi menyampaikan bahwa rekomendasi belum aktif dan menyediakan pencarian manual.
-- Modul dapat ditambahkan dari rekomendasi atau pencarian manual, dihapus, dan diurutkan sebelum rancangan dibuat.
-- Bank Materi menjadi katalog eksplorasi 43 modul, dengan indeks kode/judul, pencarian substansi/poin kunci, dan filter durasi sumber.
-- Panduan Penyuluh menjadi panduan fasilitasi berbasis durasi: alokasi waktu, pembuka/ice breaking, materi inti, interaksi, refleksi, dan penutup. Ada pilihan metode, catatan penyuluh, naskah, dan cetak.
-- AI Slide Studio menyusun prompt berdasarkan modul terpilih.
+- Menambahkan jalur rekomendasi awal yang hanya memakai jejak segmen eksplisit dari kolom `Asal Data (segmen)` pada `Matriks_Analisis`.
+- Jika tersedia pemetaan `Pemetaan_Konteks` berstatus `DISETUJUI`, sistem memakai rekomendasi kontekstual penuh (segmen wajib cocok; situasi, tujuan, durasi, dan kata kunci menjadi penambah skor).
+- Jika belum ada pemetaan penuh yang disetujui, aplikasi menampilkan daftar awal berdasarkan segmen sumber, tanpa skor kecocokan dan dengan peringatan bahwa situasi/tujuan belum dinilai.
+- Normalisasi label sumber `PT` menjadi pilihan aplikasi `MAHASISWA/PT`.
+- Penyuluh tetap dapat menambah modul manual, menghapus, dan mengurutkan modul terpilih.
+- Bank Materi menjadi katalog eksplorasi 43 modul. Panduan Penyuluh tetap menghasilkan alokasi waktu dan arahan fasilitasi sesuai durasi.
 
 ## Isi paket
-- `index.html` — frontend GitHub Pages, sudah menunjuk URL Web App yang saat ini diberikan pengguna.
-- `Code.gs` — backend Apps Script, sudah menggunakan spreadsheet ID database v0.2 yang diberikan pengguna.
-- `appsscript.json`
-- `assets/logo-bnn.webp`, `assets/logo-ananda.webp`
+- `index.html` — frontend GitHub Pages, menggunakan URL Web App yang sudah diberikan.
+- `Code.gs` — backend Apps Script, menggunakan spreadsheet ID database v0.2.
+- `appsscript.json` dan folder `assets`.
 
-## Langkah pemasangan
-1. Di proyek Apps Script yang saat ini dipakai aplikasi, salin seluruh isi `Code.gs` dari paket ini untuk menggantikan kode lama.
-2. Simpan. Jalankan `testConnection()`; target 43 modul.
-3. Tambahkan sheet `Pemetaan_Konteks` ke spreadsheet dari file `P4GN_Material_Intelligence_v0.2_PLUS_PEMETAAN_v0.5.xlsx` (salin sheet tersebut ke database utama). Sertakan header persis seperti template. Pemetaan masih kosong dan memang belum diaktifkan sampai ditelaah.
-4. Deploy → Manage deployments → Edit deployment aktif → New version → Deploy. URL deployment diharapkan tetap sama.
-5. Di GitHub repository `materip4gn.dit-ie.my.id`, ganti `index.html` dan folder `assets` dengan isi paket v0.5. Jangan unggah folder pembungkus ke root; unggah file index dan folder assets-nya.
-6. Commit perubahan, tunggu GitHub Pages selesai, lalu hard refresh browser (Ctrl+Shift+R).
+## Pemasangan
+1. Buka proyek Apps Script P4GN M-I. Ganti seluruh isi `Code.gs` dengan file dari paket ini.
+2. Simpan dan jalankan `testConnection()`; target 43 modul.
+3. Pastikan sheet `Pemetaan_Konteks` tetap ada dengan header template. Sheet ini boleh tetap kosong.
+4. Deploy → Manage deployments → Edit deployment aktif → New version → Deploy.
+5. Di repository GitHub Pages, ganti `index.html` dan folder `assets` dengan yang ada di paket ini.
+6. Commit, tunggu publikasi, lalu hard refresh (Ctrl+Shift+R).
 
 ## Perilaku rekomendasi
-- Endpoint baru: `?action=recommend`.
-- Hanya baris `Pemetaan_Konteks` dengan Status Pemetaan = `DISETUJUI` yang dinilai.
-- Bobot: segmen 25, situasi 25, tujuan perubahan 30, durasi 10, kebutuhan/kata kunci 10.
-- Jika sheet belum ada atau belum memiliki pemetaan yang disetujui, tidak ada rekomendasi otomatis yang dikarang. Penyuluh tetap dapat mencari dan memilih modul manual.
+- Prioritas 1: baris `Pemetaan_Konteks` berstatus `DISETUJUI`; segmen sasaran wajib cocok. Hasil ditampilkan sebagai rekomendasi kontekstual dengan skor dan alasan.
+- Fallback: jika belum ada pemetaan penuh yang disetujui, sistem mencari baris `Matriks_Analisis` yang `Asal Data (segmen)`-nya sama dengan segmen pilihan. Hasil disebut **daftar awal berbasis jejak sumber**, bukan rekomendasi penuh; tidak ada skor situasi/tujuan. ID sumber ditampilkan sebagai jejak.
+- Label sumber `PT` dinormalisasi menjadi `MAHASISWA/PT` agar sesuai dengan pilihan di aplikasi.
+- Pemetaan situasi/tujuan tidak diisi atau ditebak otomatis. Lengkapi dan setujui setelah telaah substansi dan ID sumber.
 
-## Catatan integritas sumber
-- Sheet sumber `Bank_Materi_60` dan `Matriks_Analisis` tetap dipakai.
-- Pemetaan sasaran/situasi/tujuan tidak diisi otomatis atau ditebak. Isi hanya berdasarkan telaah substansi dan ID sumber pendukung.
-- Panduan fasilitasi adalah usulan alokasi operasional yang dapat disesuaikan, bukan perubahan terhadap substansi modul sumber.
-- Durasi modul pada sumber tidak otomatis dianggap sebagai durasi kegiatan. Panduan membagi waktu kegiatan secara indikatif berdasarkan total waktu yang dipilih.
-
-## Pengujian setelah pemasangan
-- Apps Script: `testConnection()` → 43 modul.
+## Uji setelah pemasangan
+- Apps Script `testConnection()` → 43 modul.
 - `/exec?action=health` → moduleCount 43.
 - `/exec?action=bootstrap` → katalog 43 modul.
-- `/exec?action=recommend&segment=PAUD&situation=Penyuluhan%20rutin&objective=Meningkatkan%20pengetahuan&duration=15%20menit` → sebelum pemetaan disetujui, respons menyatakan mapping belum siap.
+- `/exec?action=recommend&segment=SMP&situation=Orientasi%20sekolah%2Fkampus&objective=Membangun%20sikap%20dan%20norma%20protektif&duration=45%20menit` → daftar awal modul dengan jejak sumber SMP, disertai keterangan bahwa situasi dan tujuan belum dinilai.
+
+## Integritas sumber
+`Bank_Materi_60` dan `Matriks_Analisis` tidak diubah. Sheet `Rujukan_Segmen_Sumber` pada workbook pendamping adalah ringkasan turunan untuk audit, bukan pengganti sumber. Panduan waktu merupakan rancangan fasilitasi indikatif dan tidak mengubah substansi modul.
