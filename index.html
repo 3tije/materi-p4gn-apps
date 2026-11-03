@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#17324d"><title>P4GN Material Intelligence</title>
+<style>
+:root{--navy:#17324d;--blue:#2367a5;--teal:#16836f;--bg:#f3f6fa;--ink:#172433;--muted:#64748b;--line:#dce4ec;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{background:linear-gradient(120deg,#142b43,#20547b);color:white;padding:24px max(20px,calc((100vw - 1180px)/2))}
+.brand{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#c8deef;font-weight:700}.hero{display:flex;justify-content:space-between;gap:20px;align-items:end;flex-wrap:wrap}.hero h1{margin:8px 0 4px;font-size:clamp(25px,4vw,38px);line-height:1.1}.hero p{margin:0;color:#d5e5f2;max-width:680px}.version{border:1px solid #7c9bb4;border-radius:30px;padding:6px 12px;font-size:12px;color:#e4eff8}
+main{max-width:1180px;margin:22px auto;padding:0 18px 50px}.notice{background:#fff8e8;border:1px solid #f1d99c;color:#76551b;padding:12px 14px;border-radius:12px;margin-bottom:18px;font-size:13px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.tab{border:1px solid var(--line);background:white;padding:10px 15px;border-radius:10px;color:#34465a;font-weight:650;cursor:pointer}.tab.active{background:var(--navy);border-color:var(--navy);color:white}
+.panel{display:none}.panel.active{display:block}.layout{display:grid;grid-template-columns: minmax(0,1.25fr) minmax(280px,.75fr);gap:16px}.card{background:white;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 2px 8px #18324b08}.card h2{font-size:18px;margin:0 0 12px}.card h3{font-size:15px;margin:0 0 8px}.muted{color:var(--muted)}.small{font-size:12px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}.field label{font-size:13px;font-weight:700;color:#35485b}.field input,.field select,.field textarea{width:100%;border:1px solid #cbd6e1;border-radius:9px;padding:10px 11px;font:inherit;background:white;color:var(--ink)}.field textarea{min-height:86px;resize:vertical}
+.btn{border:0;border-radius:10px;padding:10px 14px;background:var(--navy);color:white;font-weight:700;cursor:pointer}.btn.secondary{background:#e9f0f6;color:#24415d}.btn.teal{background:var(--teal)}.btn:disabled{opacity:.45;cursor:not-allowed}
+.statrow{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.stat{background:#edf4f9;border-radius:10px;padding:10px 13px;min-width:100px}.stat b{display:block;font-size:20px;color:var(--navy)}.stat span{font-size:11px;color:var(--muted)}
+.searchrow{display:flex;gap:8px;margin-bottom:12px}.searchrow input{flex:1;min-width:0;border:1px solid #cbd6e1;border-radius:9px;padding:10px;font:inherit}
+.materials{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-height:620px;overflow:auto;padding-right:3px}.material{border:1px solid var(--line);border-radius:12px;padding:13px;background:#fff}.material.selected{border:2px solid var(--teal);background:#f3fbf8;padding:12px}.material .code{font-size:11px;font-weight:800;color:var(--blue);letter-spacing:.05em}.material h3{margin:5px 0 7px;font-size:14px;line-height:1.35}.material p{font-size:12px;color:var(--muted);margin:0 0 10px}.material button{font-size:12px;padding:7px 10px}
+.selected-list{display:flex;flex-direction:column;gap:8px}.selected-item{padding:10px;background:#f3f7fa;border-radius:9px;display:flex;justify-content:space-between;gap:8px;font-size:13px}.selected-item button{border:0;background:transparent;color:#a33;cursor:pointer;font-weight:700}
+.output{white-space:pre-wrap;background:#f6f8fb;border:1px solid var(--line);border-radius:10px;padding:13px;font-size:13px;max-height:520px;overflow:auto}.empty{padding:30px;text-align:center;color:var(--muted);border:1px dashed #cbd6e1;border-radius:12px}
+footer{max-width:1180px;margin:auto;padding:0 18px 28px;color:#7b8794;font-size:12px}
+@media(max-width:820px){.layout{grid-template-columns:1fr}.materials{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.hero{align-items:start}}
+</style>
+</head>
+<body>
+<header><div class="hero"><div><div class="brand">Direktorat Informasi & Edukasi · BNN RI</div><h1>P4GN Material Intelligence</h1><p>Context-Based Prevention & Education System — merancang penyuluhan berdasarkan segmen, situasi, tujuan perubahan, dan durasi.</p></div><div class="version">Prototype v0.1</div></div></header>
+<main>
+<div class="notice"><b>Catatan penggunaan:</b> rekomendasi konteks pada versi ini masih berupa alat bantu pencarian dan penyusunan. Kecocokan modul, status evidence, data, dan regulasi tetap perlu divalidasi sebelum materi digunakan.</div>
+<div class="tabs">
+<button class="tab active" data-tab="builder">Rancang Penyuluhan</button><button class="tab" data-tab="bank">Bank Materi</button><button class="tab" data-tab="guide">Panduan Penyuluh</button><button class="tab" data-tab="ai">AI Slide Studio</button>
+</div>
+<section class="panel active" id="builder">
+<div class="layout">
+<div class="card">
+<h2>1. Konteks kegiatan</h2>
+<div class="grid2">
+<div class="field"><label for="segment">Segmen sasaran</label><select id="segment"><option value="">Pilih segmen</option><option>PAUD</option><option>SD</option><option>SMP</option><option>SMA-SMK</option><option>MAHASISWA/PT</option><option>KELUARGA</option><option>KOMUNITAS</option><option>PEKERJA</option><option>APARATUR/INSTITUSI</option><option>UMUM</option></select></div>
+<div class="field"><label for="situation">Situasi kegiatan</label><select id="situation"><option value="">Pilih situasi</option><option>Penyuluhan rutin</option><option>Orientasi sekolah/kampus</option><option>Parenting/pertemuan keluarga</option><option>Wilayah rentan/indikasi peredaran</option><option>Pasca kejadian/kasus di lingkungan</option><option>Kampanye publik</option><option>Penguatan kebijakan institusi</option><option>Pelatihan kader/relawan/fasilitator</option><option>Kegiatan komunitas partisipatif</option><option>Kebutuhan khusus berbasis asesmen</option></select></div>
+<div class="field"><label for="objective">Tujuan perubahan</label><select id="objective"><option>Meningkatkan pengetahuan</option><option>Membangun sikap dan norma protektif</option><option>Meningkatkan keterampilan hidup</option><option>Menguatkan faktor protektif</option><option>Meningkatkan kewaspadaan dan respons aman</option><option>Meningkatkan akses bantuan dan rujukan</option><option>Mendorong partisipasi masyarakat</option><option>Menguatkan tata kelola institusi</option><option>Mengembangkan kapasitas penyuluh/kader</option></select></div>
+<div class="field"><label for="duration">Durasi efektif</label><select id="duration"><option>15 menit</option><option>30 menit</option><option>45 menit</option><option selected>60 menit</option><option>90 menit</option><option>120 menit</option></select></div>
+</div>
+<div class="field"><label for="issue">Isu atau kebutuhan khusus (opsional)</label><textarea id="issue" placeholder="Contoh: peserta banyak terpapar ajakan teman sebaya; perlu penguatan keterampilan menolak dan meminta bantuan."></textarea></div>
+<div class="field"><label for="localdata">Data/konteks lokal (opsional)</label><textarea id="localdata" placeholder="Masukkan data yang sudah terverifikasi, sumber, wilayah, dan tanggal data. Jangan masukkan identitas pribadi."></textarea></div>
+<h2 style="margin-top:18px">2. Pilih modul yang akan digunakan</h2>
+<div class="searchrow"><input id="builderSearch" placeholder="Cari kode, judul, substansi, atau kata kunci…"><button class="btn secondary" id="clearSelection">Kosongkan</button></div>
+<div class="materials" id="builderMaterials"><div class="empty">Menghubungkan ke bank materi…</div></div>
+</div>
+<div class="card">
+<h2>Rancangan terpilih</h2>
+<div class="statrow"><div class="stat"><b id="selectedCount">0</b><span>Modul dipilih</span></div><div class="stat"><b id="durationStat">60</b><span>Menit kegiatan</span></div></div>
+<div id="selectedList" class="selected-list"><div class="empty">Belum ada modul dipilih.</div></div>
+<div class="field" style="margin-top:16px"><label for="titleOverride">Judul penyuluhan (opsional)</label><input id="titleOverride" placeholder="Judul akan disarankan otomatis"></div>
+<button class="btn teal" id="makePlan" style="width:100%">Susun rancangan penyuluhan</button>
+<p class="small muted">Pilih modul secara manual. Penandaan otomatis berdasarkan konteks baru diaktifkan setelah tag setiap materi divalidasi.</p>
+</div>
+</div>
+<div class="card" style="margin-top:16px"><h2>Hasil rancangan</h2><div id="planOutput" class="output">Hasil rancangan akan muncul di sini setelah Anda memilih modul dan menekan “Susun rancangan penyuluhan”.</div></div>
+</section>
+<section class="panel" id="bank">
+<div class="card"><h2>Bank Materi P4GN</h2><p class="muted">Telusuri katalog modul 60 menit dan tiga poin kunci pada setiap modul.</p><div class="searchrow"><input id="bankSearch" placeholder="Cari materi…"></div><div id="bankMaterials" class="materials"><div class="empty">Memuat katalog…</div></div></div>
+</section>
+<section class="panel" id="guide">
+<div class="card"><h2>Panduan Penyuluh</h2><p class="muted">Kerangka fasilitasi dibangun dari konteks kegiatan dan modul yang dipilih.</p><div class="field"><label>Catatan metode atau aktivitas yang ingin digunakan</label><textarea id="methodNotes" placeholder="Contoh: studi kasus singkat, diskusi kelompok, role-play menolak ajakan."></textarea></div><button class="btn" id="makeGuide">Buat panduan penyuluh</button><div id="guideOutput" class="output" style="margin-top:14px">Panduan belum dibuat.</div></div>
+</section>
+<section class="panel" id="ai">
+<div class="card"><h2>AI Slide Studio</h2><p class="muted">Buat prompt presentasi berdasarkan rancangan yang sudah dipilih. Salin prompt ke ChatGPT, Gemini, Canva AI, atau Gamma.</p>
+<div class="field"><label>Gaya visual presentasi</label><select id="visualStyle"><option>Modern profesional, bersih, gaya institusi pemerintah</option><option>Modern kampus, dinamis, visual storytelling</option><option>Infografis edukatif, warna cerah, flat design</option><option>Minimalis editorial, dominan hitam-putih dengan aksen merah</option></select></div>
+<div class="field"><label>Jumlah slide (opsional)</label><select id="slideCount"><option>Sesuaikan durasi dan substansi</option><option>5–7 slide</option><option>8–10 slide</option><option>10–12 slide</option><option>12–15 slide</option></select></div>
+<button class="btn" id="makePrompt">Buat prompt AI presentasi</button><div id="promptOutput" class="output" style="margin-top:14px">Prompt AI akan muncul di sini.</div><button class="btn secondary" id="copyPrompt" style="margin-top:10px">Salin prompt</button>
+</div>
+</section>
+</main>
+<footer>P4GN Material Intelligence · Prototype v0.1 · Sumber pengetahuan berasal dari bank materi yang disediakan. Seluruh penggunaan tetap memerlukan pemeriksaan substansi dan validasi manusia.</footer>
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbx3Rz59wrVXCYLOpPlLpwBC1Jhyz7QEKmnGiZ7OLDswzPwdG9-jnUdvx-jwqvdp0Xzzxw/exec";
+let modules=[], selected=new Set(), lastPlan="";
+const $=id=>document.getElementById(id);
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function jsonp(url){
+ return new Promise((resolve,reject)=>{
+  const cb="p4gn_cb_"+Math.random().toString(36).slice(2);
+  const timer=setTimeout(()=>{cleanup();reject(new Error("Waktu koneksi habis. Periksa URL Web App Apps Script."));},18000);
+  function cleanup(){clearTimeout(timer);delete window[cb];script.remove();}
+  window[cb]=data=>{cleanup();resolve(data)};
+  const script=document.createElement("script");script.src=url+(url.includes("?")?"&":"?")+"callback="+cb;
+  script.onerror=()=>{cleanup();reject(new Error("Tidak dapat mengambil data dari Apps Script."));};
+  document.body.appendChild(script);
+ });
+}
+function sampleData(){
+ return [{code:"M01",title:"Contoh modul M01 — konfigurasi belum terhubung",substance:"Isi modul akan ditarik dari Google Sheets setelah URL Apps Script dipasang.",explanation:"Prototype dapat ditinjau, tetapi data sumber belum tersambung.",output:"",pks:[]}];
+}
+async function loadData(){
+ if(API_URL.includes("PASTE_")){modules=sampleData();renderAll();setConnection("Mode pratinjau — URL Apps Script belum dipasang.");return;}
+ try{const d=await jsonp(API_URL+"?action=bootstrap");if(!d.ok)throw new Error(d.error||"API tidak mengembalikan data.");modules=d.modules||[];renderAll();setConnection("Terhubung · "+modules.length+" modul dari Google Sheets.");}
+ catch(e){modules=sampleData();renderAll();setConnection("Koneksi gagal: "+e.message);}
+}
+function setConnection(msg){const n=document.createElement("div");n.className="small muted";n.style.marginTop="8px";n.textContent=msg;document.querySelector("header").appendChild(n);}
+function searchText(m){return [m.code,m.title,m.substance,m.explanation,...(m.pks||[]).map(x=>x.message||"")].join(" ").toLowerCase();}
+function cardHTML(m,withAdd=true){const on=selected.has(m.code);return `<article class="material ${on?"selected":""}"><div class="code">${esc(m.code)}</div><h3>${esc(m.title)}</h3><p>${esc(m.substance||m.explanation||"")}</p><div class="small muted">${(m.pks||[]).length} poin kunci</div>${withAdd?`<button class="btn ${on?"secondary":"teal"}" data-pick="${esc(m.code)}">${on?"Dipilih ✓":"Pilih modul +"}</button>`:""}</article>`;}
+function renderMaterials(target,query="",withAdd=true){const q=query.toLowerCase();const list=modules.filter(m=>searchText(m).includes(q));$(target).innerHTML=list.length?list.map(m=>cardHTML(m,withAdd)).join(""):`<div class="empty">Tidak ada materi yang cocok.</div>`;}
+function renderAll(){renderMaterials("builderMaterials",$("builderSearch").value);renderMaterials("bankMaterials",$("bankSearch").value,false);renderSelected();}
+function renderSelected(){
+ $("selectedCount").textContent=selected.size;$("durationStat").textContent=parseInt($("duration").value)||60;
+ const chosen=modules.filter(m=>selected.has(m.code));
+ $("selectedList").innerHTML=chosen.length?chosen.map(m=>`<div class="selected-item"><span><b>${esc(m.code)}</b> · ${esc(m.title)}</span><button data-remove="${esc(m.code)}">Hapus</button></div>`).join(""):`<div class="empty">Belum ada modul dipilih.</div>`;
+}
+document.addEventListener("click",e=>{
+ const p=e.target.closest("[data-pick]");if(p){const c=p.dataset.pick;selected.has(c)?selected.delete(c):selected.add(c);renderAll();}
+ const r=e.target.closest("[data-remove]");if(r){selected.delete(r.dataset.remove);renderAll();}
+});
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(".panel").forEach(x=>x.classList.toggle("active",x.id===b.dataset.tab));}));
+$("builderSearch").addEventListener("input",e=>renderMaterials("builderMaterials",e.target.value));
+$("bankSearch").addEventListener("input",e=>renderMaterials("bankMaterials",e.target.value,false));
+$("duration").addEventListener("change",renderSelected);
+$("clearSelection").onclick=()=>{selected.clear();renderAll();};
+function context(){return {segment:$("segment").value||"Belum ditentukan",situation:$("situation").value||"Belum ditentukan",objective:$("objective").value,duration:$("duration").value,issue:$("issue").value,localdata:$("localdata").value};}
+function chosen(){return modules.filter(m=>selected.has(m.code));}
+function titleFor(c){return $("titleOverride").value.trim()||`Penyuluhan P4GN: ${c.objective} untuk ${c.segment}`;}
+function materialText(ms){return ms.map(m=>`${m.code} — ${m.title}\nSubstansi: ${m.substance||"-"}\nPenjelasan: ${m.explanation||"-"}\nOutput: ${m.output||"-"}\nPoin kunci:\n${(m.pks||[]).map(p=>"- "+(p.message||p.detail||"")).join("\n")}`).join("\n\n");}
+function makePlanText(){
+ const c=context(),ms=chosen();if(!ms.length)return "Pilih minimal satu modul terlebih dahulu.";
+ const mins=parseInt(c.duration)||60, each=Math.max(5,Math.floor((mins-10)/ms.length));
+ return `${titleFor(c)}\n\nKONTEKS\nSegmen: ${c.segment}\nSituasi: ${c.situation}\nTujuan perubahan: ${c.objective}\nDurasi efektif: ${c.duration}\nIsu khusus: ${c.issue||"-"}\nData lokal: ${c.localdata||"-"}\n\nRANCANGAN ALUR (alokasi indikatif)\n1. Pembukaan dan kontrak belajar — 5 menit\n2. Pengantar konteks dan pengalaman peserta — ${Math.max(5,Math.floor((mins-10)*.15))} menit\n3. Pembahasan modul terpilih — ${Math.max(5,mins-10-Math.max(5,Math.floor((mins-10)*.15))-5)} menit\n4. Refleksi, langkah tindakan, dan evaluasi — 5 menit\n\nMODUL DAN POIN KUNCI\n${materialText(ms)}\n\nCATATAN PELAKSANAAN\n- Sesuaikan bahasa, contoh, dan metode dengan tahap perkembangan serta karakteristik peserta.\n- Gunakan data lokal hanya jika sumber, wilayah, dan tanggalnya jelas.\n- Jangan menyamakan indikasi, rumor, dan temuan terverifikasi.\n- Periksa kembali status regulasi, data, dan klaim sebelum dipresentasikan.\n- Hindari stigma, pelabelan, glorifikasi, dan pendekatan menakut-nakuti.`;
+}
+$("makePlan").onclick=()=>{lastPlan=makePlanText();$("planOutput").textContent=lastPlan;};
+$("makeGuide").onclick=()=>{
+ const plan=lastPlan||makePlanText();if(plan.startsWith("Pilih minimal")){$("guideOutput").textContent=plan;return;}
+ $("guideOutput").textContent=plan+`\n\nPANDUAN FASILITASI\n\nSebelum kegiatan:\n- Pastikan materi, data, dan rujukan telah diperiksa.\n- Siapkan metode yang aman dan sesuai segmen.\n\nSaat kegiatan:\n- Bangun suasana dialog yang aman dan tidak menghakimi.\n- Gunakan pertanyaan terbuka dan beri ruang peserta berpikir.\n- Hubungkan pesan dengan situasi nyata tanpa mengekspos identitas.\n\nMetode/aktivitas yang direncanakan:\n${$("methodNotes").value||"- Diskusi interaktif dan refleksi peserta."}\n\nPenutup:\n- Minta peserta menyebutkan satu pemahaman atau tindakan yang akan dilakukan.\n- Berikan informasi kanal bantuan/rujukan resmi yang telah diverifikasi.`;
+};
+$("makePrompt").onclick=()=>{
+ const ms=chosen();if(!ms.length){$("promptOutput").textContent="Pilih modul pada menu Rancang Penyuluhan terlebih dahulu.";return;}
+ const c=context();$("promptOutput").textContent=`Bertindaklah sebagai instructional designer dan perancang presentasi edukasi P4GN.\n\nBUAT PRESENTASI PENYULUHAN\nJudul: ${titleFor(c)}\nSegmen sasaran: ${c.segment}\nSituasi: ${c.situation}\nTujuan perubahan: ${c.objective}\nDurasi: ${c.duration}\nJumlah slide: ${$("slideCount").value}\nGaya visual: ${$("visualStyle").value}\nIsu khusus: ${c.issue||"-"}\nData lokal yang disediakan: ${c.localdata||"-"}\n\nMATERI SUMBER YANG WAJIB MENJADI DASAR:\n${materialText(ms)}\n\nINSTRUKSI:\n1. Pertahankan substansi, pesan kunci, dan batasan materi sumber.\n2. Jangan menciptakan angka, hasil penelitian, kasus, kutipan, regulasi, atau referensi baru.\n3. Jika informasi tidak cukup, tulis [PERLU VALIDASI], jangan mengarang.\n4. Sesuaikan bahasa, contoh, kedalaman, dan aktivitas dengan segmen.\n5. Buat alur: pembuka yang relevan, konteks, pesan inti, contoh/skenario aman, aktivitas reflektif, tindakan praktis, dan evaluasi.\n6. Batasi teks pada slide; gunakan visualisasi yang membantu pemahaman.\n7. Sertakan catatan narasi presenter untuk setiap slide.\n8. Sertakan slide referensi yang hanya memuat sumber yang benar-benar disediakan.\n9. Hindari stigma, menakut-nakuti, glorifikasi narkoba, dan detail operasional yang tidak diperlukan.\n\nHASILKAN: judul tiap slide, isi ringkas, arahan visual, dan catatan presenter.`;
+};
+$("copyPrompt").onclick=async()=>{const t=$("promptOutput").textContent;if(!t||t==="Prompt AI akan muncul di sini.")return;try{await navigator.clipboard.writeText(t);$("copyPrompt").textContent="Tersalin ✓";setTimeout(()=>$("copyPrompt").textContent="Salin prompt",1600);}catch(e){alert("Salin manual dari kotak prompt.");}};
+loadData();
+</script>
+</body></html>
