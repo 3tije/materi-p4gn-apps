@@ -1,47 +1,41 @@
-# P4GN Material Intelligence v0.3
+# P4GN Material Intelligence v0.5
 
-## Pembaruan
-- Logo BNN di kiri dan Ananda Bersinar di kanan header.
-- Tautan pena.mytije.com menggantikan label prototype.
-- Catatan penggunaan dan pesan teknis integrasi dihilangkan dari tampilan publik.
-- API dibagi menjadi dua jalur: katalog ringkas (`bootstrap`) dan jejak sumber per modul (`detail`).
-- Tidak menggunakan CacheService atau PropertiesService untuk menampung payload besar.
-- Materi dan poin kunci ditarik dari `Bank_Materi_60`; jejak substansi/sumber ditarik dari `Matriks_Analisis`.
+## Fokus pembaruan
+- Rancang Penyuluhan: konteks kegiatan diisi lebih dahulu, lalu tombol **Cari modul terkait**.
+- Rekomendasi otomatis hanya mengambil baris pemetaan berstatus `DISETUJUI`; jika belum ada pemetaan, aplikasi menyampaikan bahwa rekomendasi belum aktif dan menyediakan pencarian manual.
+- Modul dapat ditambahkan dari rekomendasi atau pencarian manual, dihapus, dan diurutkan sebelum rancangan dibuat.
+- Bank Materi menjadi katalog eksplorasi 43 modul, dengan indeks kode/judul, pencarian substansi/poin kunci, dan filter durasi sumber.
+- Panduan Penyuluh menjadi panduan fasilitasi berbasis durasi: alokasi waktu, pembuka/ice breaking, materi inti, interaksi, refleksi, dan penutup. Ada pilihan metode, catatan penyuluh, naskah, dan cetak.
+- AI Slide Studio menyusun prompt berdasarkan modul terpilih.
 
 ## Isi paket
-- `index.html`
-- `Code.gs`
+- `index.html` — frontend GitHub Pages, sudah menunjuk URL Web App yang saat ini diberikan pengguna.
+- `Code.gs` — backend Apps Script, sudah menggunakan spreadsheet ID database v0.2 yang diberikan pengguna.
 - `appsscript.json`
-- `assets/logo-bnn.png`
-- `assets/logo-ananda.png`
+- `assets/logo-bnn.webp`, `assets/logo-ananda.webp`
 
-## Hubungkan Google Sheets
-1. Gunakan spreadsheet hasil konversi workbook revisi istilah terbaru.
-2. Pastikan sheet `Bank_Materi_60` dan `Matriks_Analisis` tersedia.
-3. Buka Extensions → Apps Script.
-4. Ganti seluruh isi `Code.gs` dengan file `Code.gs` pada paket ini.
-5. Isi `SPREADSHEET_ID` dengan ID spreadsheet.
-6. Simpan, lalu jalankan `testConnection()` dan beri otorisasi. Target awal: 43 modul.
-7. Deploy → New deployment → Web app; Execute as: Me; akses: Anyone (sesuai kebijakan Workspace).
-8. Salin URL `/exec`.
-9. Pada `index.html`, isi `API_URL` dengan URL `/exec` tersebut (tanpa parameter).
-10. Unggah `index.html` dan folder `assets` ke root repository GitHub Pages.
+## Langkah pemasangan
+1. Di proyek Apps Script yang saat ini dipakai aplikasi, salin seluruh isi `Code.gs` dari paket ini untuk menggantikan kode lama.
+2. Simpan. Jalankan `testConnection()`; target 43 modul.
+3. Tambahkan sheet `Pemetaan_Konteks` ke spreadsheet dari file `P4GN_Material_Intelligence_v0.2_PLUS_PEMETAAN_v0.5.xlsx` (salin sheet tersebut ke database utama). Sertakan header persis seperti template. Pemetaan masih kosong dan memang belum diaktifkan sampai ditelaah.
+4. Deploy → Manage deployments → Edit deployment aktif → New version → Deploy. URL deployment diharapkan tetap sama.
+5. Di GitHub repository `materip4gn.dit-ie.my.id`, ganti `index.html` dan folder `assets` dengan isi paket v0.5. Jangan unggah folder pembungkus ke root; unggah file index dan folder assets-nya.
+6. Commit perubahan, tunggu GitHub Pages selesai, lalu hard refresh browser (Ctrl+Shift+R).
 
-## Uji API
-- `/exec?action=ping`
-- `/exec?action=bootstrap` → daftar modul dan poin kunci.
-- `/exec?action=detail&code=M01` → jejak sumber untuk modul M01.
+## Perilaku rekomendasi
+- Endpoint baru: `?action=recommend`.
+- Hanya baris `Pemetaan_Konteks` dengan Status Pemetaan = `DISETUJUI` yang dinilai.
+- Bobot: segmen 25, situasi 25, tujuan perubahan 30, durasi 10, kebutuhan/kata kunci 10.
+- Jika sheet belum ada atau belum memiliki pemetaan yang disetujui, tidak ada rekomendasi otomatis yang dikarang. Penyuluh tetap dapat mencari dan memilih modul manual.
 
-## Catatan integrasi
-- Katalog ringkas dan referensi modul diambil terpisah untuk mencegah satu respons membengkak.
-- Jika kode Apps Script diubah, buat deployment versi baru atau edit deployment aktif ke versi terbaru.
-- File paket ini belum dapat mengisi URL deployment dan ID spreadsheet milik pengguna. Integrasi final baru terverifikasi setelah kedua nilai tersebut dipasang dan API diuji.
+## Catatan integritas sumber
+- Sheet sumber `Bank_Materi_60` dan `Matriks_Analisis` tetap dipakai.
+- Pemetaan sasaran/situasi/tujuan tidak diisi otomatis atau ditebak. Isi hanya berdasarkan telaah substansi dan ID sumber pendukung.
+- Panduan fasilitasi adalah usulan alokasi operasional yang dapat disesuaikan, bukan perubahan terhadap substansi modul sumber.
+- Durasi modul pada sumber tidak otomatis dianggap sebagai durasi kegiatan. Panduan membagi waktu kegiatan secara indikatif berdasarkan total waktu yang dipilih.
 
-## Uji kesehatan koneksi (setelah deployment)
-- `/exec?action=health` → menampilkan jumlah modul dan baris referensi tanpa mengirim seluruh isi database.
-- Target `moduleCount`: 43.
-- `/exec?action=bootstrap` → mengirim katalog ringkas untuk aplikasi.
-- `/exec?action=detail&code=M01` → mengambil jejak referensi satu modul.
-
-## Catatan penting
-Jika aplikasi lama menampilkan error `Argumen terlalu besar: value`, ganti kode Apps Script lama dengan `Code.gs` pada paket ini lalu deploy versi baru. Kode baru tidak menyimpan seluruh payload katalog ke Script Properties/Cache; katalog dan detail referensi dikirim melalui endpoint terpisah.
+## Pengujian setelah pemasangan
+- Apps Script: `testConnection()` → 43 modul.
+- `/exec?action=health` → moduleCount 43.
+- `/exec?action=bootstrap` → katalog 43 modul.
+- `/exec?action=recommend&segment=PAUD&situation=Penyuluhan%20rutin&objective=Meningkatkan%20pengetahuan&duration=15%20menit` → sebelum pemetaan disetujui, respons menyatakan mapping belum siap.
