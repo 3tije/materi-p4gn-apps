@@ -34,21 +34,21 @@
 <section id="guide" class="panel"><div class="card"><h2>Panduan Penyuluh — Pengelolaan waktu dan fasilitasi</h2><p class="muted smalltext">Panduan disusun dari durasi, konteks, dan modul yang dipilih. Alokasi waktu dapat disunting sebelum digunakan.</p><div class="stats"><div class="stat"><b id="guideDuration">60</b><span>Menit tersedia</span></div><div class="stat"><b id="guideModules">0</b><span>Modul terpilih</span></div></div><div class="guide-grid"><div><div class="field"><label>Ice breaking / pembuka</label><select id="icebreaker"><option value="question">Pertanyaan pemantik singkat</option><option value="poll">Angkat tangan / polling cepat</option><option value="word">Satu kata tentang topik</option><option value="scenario">Respons terhadap skenario singkat</option><option value="none">Tanpa ice breaking khusus</option></select></div><div class="field"><label>Metode interaksi utama</label><select id="method"><option>Dialog dan tanya jawab</option><option>Diskusi berpasangan/kelompok kecil</option><option>Studi kasus singkat</option><option>Simulasi / role-play</option><option>Refleksi individu</option></select></div><div class="field"><label>Catatan khusus penyuluh</label><textarea id="guideNotes" placeholder="Catatan penyesuaian metode, kondisi peserta, alat bantu..."></textarea></div><button class="btn primary" id="buildGuide">Buat / perbarui panduan</button><button class="btn soft" id="printGuide" style="margin-left:5px">Cetak panduan</button></div><div><div id="timeline" class="timeline"><div class="empty">Pilih modul dan susun rancangan terlebih dahulu.</div></div></div></div><div class="section-head"><h2>Naskah panduan penyuluh</h2><span class="tag">Ringkas + narasi</span></div><div id="guideOutput" class="output">Panduan pelaksanaan akan tampil di sini.</div></div></section>
 <section id="ai" class="panel"><div class="card">
 <h2>Evidence-Based P4GN Presentation Studio</h2>
-<p class="muted smalltext">Merancang presentasi penyuluhan berdasarkan bank materi, matriks keterlacakan, dan tujuan pembelajaran. AI mengemas substansi sumber menjadi pengalaman belajar; bukan menciptakan dasar pengetahuan baru.</p>
+<p class="muted smalltext">Merancang presentasi penyuluhan yang berbasis materi tervalidasi. Sumber dan keterlacakan dijaga di belakang layar; slide peserta hanya menampilkan pesan edukatif yang komunikatif.</p>
 <div class="grid2">
 <div class="field"><label>Gaya visual</label><select id="visualStyle"><option>Modern profesional, bersih, gaya institusi pemerintah</option><option>Modern kampus, dinamis, visual storytelling</option><option>Infografis edukatif, warna cerah, flat design</option><option>Minimalis editorial, dominan hitam-putih dengan aksen merah</option></select></div>
 <div class="field"><label>Jumlah slide</label><select id="slideCount"><option value="auto">Otomatis berdasarkan durasi dan substansi</option><option value="6">6 slide (ringkas)</option><option value="8">8 slide</option><option value="10">10 slide</option><option value="12">12 slide</option><option value="15">15 slide</option></select></div>
 </div>
-<div class="studio-note"><b>Prinsip evidence-first:</b> substansi, pesan kunci, dan fakta wajib berasal dari modul terpilih. Setiap slide materi menampilkan jejak modul/PK dan ID referensi yang tersedia. Slide fasilitasi (pembuka, aktivitas, refleksi, evaluasi) boleh dirancang untuk pembelajaran, tetapi tidak boleh menyisipkan klaim faktual tanpa sumber.</div>
+<div class="studio-note"><b>Standar tampilan:</b> substansi tetap berbasis sumber, tetapi kode modul, kode poin, ID referensi, nama sheet, dan istilah database tidak ditampilkan pada slide peserta. Informasi keterlacakan tersedia terpisah dalam panduan internal penyuluh.</div>
 <div class="slide-tools"><button class="btn primary" id="makePrompt">Rancang Presentasi Berbasis Sumber</button><button class="btn soft" id="copyPrompt">Salin Master Blueprint</button><button class="btn soft" id="copyGuide">Salin Panduan Penyuluh</button></div>
 <div id="promptOutput" class="output">Pilih modul dan susun rancangan terlebih dahulu.</div>
 <div class="section-head"><h2>Rancangan slide</h2><span class="tag" id="slideCountLabel">Belum dibuat</span></div>
 <div id="slideList" class="slide-list"></div>
-<div class="notice" style="margin-top:14px">Standar: pesan sumber dipertahankan; bahasa, contoh hipotetis, aktivitas, narasi, dan visual dapat disesuaikan dengan sasaran. Periksa kembali setiap hasil AI sebelum digunakan.</div>
+<div class="notice" style="margin-top:14px">Standar: bukti dan substansi dijaga di belakang layar. Tampilan peserta harus bersih, komunikatif, dan bebas dari kode maupun metadata internal. Periksa kembali hasil AI sebelum digunakan.</div>
 </div></section>
 </main><footer>P4GN Material Intelligence · Direktorat Informasi & Edukasi – BNN RI</footer>
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycbyUWRtuE2PgZg0r3mR1wBzkFGOWImBOrPKCVOs_Im5rA_r8YAyU3K9SGvlSoH6xLwRr0w/exec";
+const API_URL="https://script.google.com/macros/s/AKfycbx3Rz59wrVXCYLOpPlLpwBC1Jhyz7QEKmnGiZ7OLDswzPwdG9-jnUdvx-jwqvdp0Xzzxw/exec";
 let modules=[],selected=[],lastPlan="",lastGuide="",recommendationReady=false;
 const $=id=>document.getElementById(id);const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function jsonp(url){return new Promise((resolve,reject)=>{const cb="p4gn_cb_"+Math.random().toString(36).slice(2);let script;const timer=setTimeout(()=>{clean();reject(new Error("Permintaan melewati batas waktu."));},25000);function clean(){clearTimeout(timer);delete window[cb];if(script)script.remove();}window[cb]=d=>{clean();resolve(d)};script=document.createElement("script");script.src=url+(url.includes("?")?"&":"?")+"callback="+cb+"&_="+Date.now();script.onerror=()=>{clean();reject(new Error("Browser tidak dapat mengambil respons Apps Script."));};document.body.appendChild(script);});}
@@ -116,15 +116,15 @@ function buildLearningSlides(c,keys,total){
  groups.forEach((group,i)=>{
   if(!group.length)return;
   const moduleNames=[...new Set(group.map(x=>x.module))].join(", ");
-  const onScreen=group.map(x=>`${x.pk} — ${x.message}${x.detail?"\nPenjelasan sumber: "+x.detail:""}`).join("\n\n");
-  const sources=[...new Set(group.map(x=>x.module+"/"+x.pk))].join(", ");
+  const onScreen=group.map(x=>`${x.message}${x.detail?"\n"+x.detail:""}`).join("\n\n");
+  const sources="Materi pembelajaran";
   const sourceIds=[...new Set(group.flatMap(x=>x.refs||[]))];
-  add("evidence",`Materi inti ${i+1}: ${shortTitle(group[0].message,moduleNames)}`,`Membangun pemahaman berdasarkan poin kunci sumber ${sources}.`,onScreen,"Pilih satu visual penjelas (diagram, ilustrasi, alur, atau perbandingan) yang menerangkan pesan sumber. Jangan mengubah teks pesan kunci.",`Jelaskan setiap poin dengan urutan yang logis. Gunakan uraian sumber sebagai penjelas. Bila perlu contoh, tandai sebagai ilustrasi hipotetis dan jangan menyatakannya sebagai data faktual.`,group,sources+(sourceIds.length?" | ID referensi: "+sourceIds.join("; "):" | ID referensi spesifik belum terpetakan; lihat detail modul."));
+  add("evidence",`Materi inti ${i+1}: ${shortTitle(group[0].message,moduleNames)}`,`Membangun pemahaman berdasarkan materi pembelajaran yang telah dipilih.`,onScreen,"Pilih satu visual penjelas (diagram, ilustrasi, alur, atau perbandingan) yang menerangkan pesan sumber. Jangan mengubah teks pesan kunci.",`Jelaskan gagasan dengan urutan yang logis dan bahasa sesuai usia peserta. Bila perlu contoh, tandai sebagai ilustrasi hipotetis dan jangan menyatakannya sebagai data faktual.`,group,sources+(sourceIds.length?" | ID referensi: "+sourceIds.join("; "):" | ID referensi spesifik belum terpetakan; lihat detail modul."));
  });
  add("practice","Latihan penerapan","Membantu peserta menghubungkan materi dengan pilihan atau tindakan.",`Tugas peserta:\n1. Identifikasi pesan dari materi yang relevan.\n2. Diskusikan pilihan respons yang aman/tepat.\n3. Sampaikan alasan berdasarkan materi.`,"Tampilkan skenario latihan hipotetis yang sederhana dan sesuai usia. Beri label 'ilustrasi latihan', bukan kasus nyata.","Fasilitasi diskusi berpasangan/kelompok. Minta peserta merujuk pada pesan sumber. Jangan menambahkan fakta tentang kejadian nyata.",keys,"AKTIVITAS BERBASIS MATERI TERPILIH");
  add("reflection","Refleksi dan komitmen","Menguatkan transfer pembelajaran ke tindakan.",`Refleksi:\n• Apa satu hal penting yang dipahami?\n• Pilihan atau tindakan apa yang dapat dilakukan setelah sesi?\nTujuan: ${c.objective}`,"Gunakan visual sederhana: satu gagasan utama dan satu langkah tindak lanjut.","Minta peserta memilih satu tindakan realistis. Hindari meminta komitmen publik yang memaksa.",keys,"REFLEKSI BERDASARKAN TUJUAN");
  add("check","Cek pemahaman","Memeriksa apakah pesan inti dipahami.",keys.slice(0,3).map((k,i)=>`Pertanyaan ${i+1}: Jelaskan dengan kata-kata sendiri — ${shortTitle(k.message,k.pk)}?`).join("\n"),"Tampilkan 2–3 pertanyaan singkat; jawaban harus dapat ditelusuri ke materi sumber.","Gunakan tanya jawab cepat atau kartu respons. Koreksi dengan merujuk kembali pada pesan sumber.",keys,"EVALUASI BERBASIS PESAN SUMBER");
- add("summary","Rangkuman: pesan yang dibawa pulang","Mengulang pesan sumber yang paling penting.",keys.map(k=>`${k.module} ${k.pk}: ${k.message}`).join("\n"),"Susun pesan dalam hierarki yang jelas. Hindari menambah slogan atau klaim yang menggeser makna.","Bacakan kembali pesan utama. Pastikan tidak ada perubahan istilah atau makna.",keys,"RANGKUMAN SUMBER");
+ add("summary","Rangkuman: pesan yang dibawa pulang","Mengulang pesan sumber yang paling penting.",keys.map(k=>k.message).join("\n"),"Susun pesan dalam hierarki yang jelas. Hindari menambah slogan atau klaim yang menggeser makna.","Bacakan kembali pesan utama. Pastikan tidak ada perubahan istilah atau makna.",keys,"RANGKUMAN SUMBER");
  add("closing","Penutup dan tindak lanjut","Menutup sesi dan mengarahkan langkah berikutnya.",`Terima kasih telah berpartisipasi.\nIngat tujuan sesi: ${c.objective}\nTindak lanjut: gunakan informasi dan jalur bantuan resmi yang telah diverifikasi.`,"Visual penutup positif, inklusif, dan sederhana. Jangan mencantumkan nomor/kanal yang tidak diverifikasi.","Ucapkan terima kasih. Sampaikan kanal bantuan hanya bila telah dipastikan resmi dan relevan.");
  // Ensure slide count is controlled. For explicit count, merge/split only the evidence slides while keeping all source points.
  const desired=$("slideCount").value==="auto"?(total<=15?6:total<=30?8:total<=45?10:total<=60?12:total<=90?14:15):parseInt($("slideCount").value,10);
@@ -146,16 +146,122 @@ function buildLearningSlides(c,keys,total){
  result.forEach((s,i)=>{s.no=i+1;s.total=result.length;s.minutes=mins[i];s.start=cursor;cursor+=mins[i];});
  return result;
 }
-function evidenceText(s){return (s.content||[]).map(x=>`${x.module} — ${x.moduleTitle}\n${x.pk}: ${x.message}${x.detail?"\nDetail sumber: "+x.detail:""}${x.refs?.length?"\nID referensi: "+x.refs.join("; "):"\nID referensi: belum terpetakan secara spesifik; periksa detail modul."}`).join("\n\n");}
+function evidenceText(s){
+ // Audience-facing content only: no module codes, PK labels, row numbers, or source IDs.
+ return (s.content||[]).map(x=>{
+  const parts=[String(x.message||"").trim()];
+  if(x.detail)parts.push(String(x.detail).trim());
+  return parts.filter(Boolean).join("\n");
+ }).join("\n\n");
+}
 function slidePrompt(s,c,style){
- const evidence=evidenceText(s);
- return `P4GN MATERIAL INTELLIGENCE — EVIDENCE-BASED PRESENTATION\nBUAT SLIDE ${String(s.no).padStart(2,"0")} DARI ${s.total}\n\nKONTEKS PRESENTASI\nJudul: ${titleFor(c)}\nSasaran: ${c.segment}\nSituasi: ${c.situation}\nTujuan perubahan: ${c.objective}\nDurasi total: ${c.duration}\nAlokasi slide ini: ${s.minutes} menit\nGaya visual: ${style}\nFormat: 16:9. Hasilkan SATU slide saja.\n\nDESAIN INSTRUKSIONAL\nJudul slide: ${s.title}\nFungsi pembelajaran: ${s.purpose}\nTeks/isi yang harus tampil:\n${s.onScreen}\n\n${evidence?`DASAR SUBSTANSI SUMBER — PERTAHANKAN MAKNA DAN PESANNYA\n${evidence}\n\n`:""}CATATAN UNTUK PENYULUH\n${s.notes}\n\nARAHAN VISUAL\n${s.visual}\n\nATURAN WAJIB\n1. Pesan kunci dan substansi sumber tidak boleh diubah, dipelintir, atau dihilangkan.\n2. Jangan menambah angka, statistik, regulasi, nama lembaga, fakta, atau referensi yang tidak disediakan.\n3. Jika teks sumber tidak cukup untuk menjawab sesuatu, jangan mengarang; beri tanda [PERLU VALIDASI].\n4. Gunakan NARKOBA sebagai istilah payung publik dan BAHAN ADIKTIF sesuai standar istilah sistem.\n5. Contoh tambahan harus dinyatakan sebagai ilustrasi hipotetis, bukan fakta/kasus nyata.\n6. Gunakan bahasa yang sesuai sasaran, tidak menstigma, dan tidak menakut-nakuti.\n7. Jangan memadatkan semua materi menjadi satu infografis; buat slide sesuai fungsi pembelajaran yang ditetapkan.\n8. Tampilkan teks yang ringkas tetapi cukup untuk mendukung penyampaian.\n9. Jangan membuat slide lain; hasilkan hanya slide ${s.no}.`;
+ const learningContent=evidenceText(s);
+ return `P4GN PRESENTATION — SLIDE ${String(s.no).padStart(2,"0")} DARI ${s.total}
+
+KONTEKS KEGIATAN
+Tema presentasi: ${titleFor(c)}
+Sasaran: ${c.segment}
+Situasi: ${c.situation}
+Tujuan pembelajaran: ${c.objective}
+Durasi keseluruhan: ${c.duration}
+Alokasi waktu slide ini: ${s.minutes} menit
+Gaya visual: ${style}
+Format: 16:9. Buat SATU slide final saja.
+
+JUDUL SLIDE
+${s.title}
+
+FOKUS PEMBELAJARAN
+${s.purpose}
+
+TEKS DAN PESAN YANG PERLU DISAMPAIKAN
+${s.onScreen}
+
+${learningContent?`PENGUAT SUBSTANSI\nGunakan gagasan dan penjelasan berikut untuk menjaga ketepatan isi. Olah menjadi bahasa presentasi yang alami dan mudah dipahami sasaran, tanpa mengubah maknanya:\n${learningContent}\n\n`:""}ARAHAN UNTUK DESAIN
+${s.visual}
+
+CATATAN PENYAMPAIAN
+${s.notes}
+
+STANDAR HASIL
+1. Buat slide presentasi edukatif yang profesional dan menarik, bukan poster katalog, lembar database, atau infografis yang hanya menumpuk kotak-kotak teks.
+2. Tampilkan hanya judul, pesan, penjelasan, pertanyaan, atau instruksi yang memang perlu dilihat peserta.
+3. Jangan tampilkan kode modul, kode PK, nomor baris, ID referensi, nama sheet, istilah database, atau istilah teknis pengembangan materi.
+4. Jangan menyalin struktur sumber sebagai label. Ubah menjadi judul dan kalimat edukatif yang komunikatif tanpa mengubah substansi.
+5. Satu slide memiliki satu fokus utama. Gunakan hierarki visual yang jelas, teks ringkas, dan ruang kosong yang cukup.
+6. Pilih visual yang membantu peserta memahami gagasan, bukan dekorasi yang memenuhi layar.
+7. Sesuaikan bahasa, ilustrasi, dan contoh dengan usia serta konteks sasaran. Hindari stigma, menyalahkan korban/keluarga, dan pendekatan menakut-nakuti.
+8. Jangan menambah statistik, regulasi, fakta, atau klaim yang tidak tersedia. Contoh baru harus dinyatakan sebagai ilustrasi hipotetis.
+9. Jangan menampilkan catatan penyuluh atau instruksi desain pada slide peserta.
+10. Pesan dan makna materi sumber harus tetap konsisten.
+11. Hasilkan hanya slide ${s.no}; jangan membuat seluruh presentasi.`;
 }
 function makeMasterBlueprint(c,slides,style){
- return `MASTER BLUEPRINT — EVIDENCE-BASED P4GN PRESENTATION\n${titleFor(c)}\nSasaran: ${c.segment}\nSituasi: ${c.situation}\nTujuan perubahan: ${c.objective}\nDurasi: ${c.duration}\nJumlah slide: ${slides.length}\nGaya visual: ${style}\n\nFILOSOFI\nSumber pengetahuan dan bank materi menentukan substansi. Instructional design menentukan urutan pembelajaran. AI hanya mengemas materi menjadi slide, narasi, aktivitas, dan visual.\n\nSTANDAR KONSISTENSI\n- Pesan kunci, istilah, dan makna sumber harus sama pada semua penyuluh.\n- Setiap slide materi harus dapat ditelusuri ke kode modul dan PK.\n- Slide fasilitasi tidak boleh menambah klaim faktual tanpa sumber.\n- Adaptasi boleh dilakukan pada bahasa, metode, contoh hipotetis, dan visual; bukan pada substansi.\n\nALUR SLIDE\n${slides.map(s=>`SLIDE ${String(s.no).padStart(2,"0")} — ${s.title}\nFungsi: ${s.purpose}\nAlokasi: ${s.minutes} menit\nIsi: ${s.onScreen}\nDasar: ${s.sourceLabel}`).join("\n\n")}\n\nMODUL SUMBER TERPILIH\n${materialSummary()}`;
+ return `MASTER BLUEPRINT PRESENTASI PENYULUHAN P4GN
+${titleFor(c)}
+Sasaran: ${c.segment}
+Situasi: ${c.situation}
+Tujuan pembelajaran: ${c.objective}
+Durasi: ${c.duration}
+Jumlah slide: ${slides.length}
+Gaya visual: ${style}
+
+ARAHAN UMUM UNTUK PEMBUAT PRESENTASI
+Buat presentasi edukatif yang utuh dan mengalir. Presentasi harus terasa seperti materi yang disiapkan seorang instructional designer profesional untuk disampaikan langsung kepada peserta, bukan kumpulan ringkasan modul atau infografis katalog.
+
+PISAHKAN DENGAN TEGAS
+- Isi yang terlihat peserta: judul, pesan edukatif, penjelasan, pertanyaan, instruksi aktivitas, dan rangkuman.
+- Informasi internal: kode modul, kode poin, ID referensi, nama sheet, nomor baris, dan metadata sumber. Informasi internal tidak boleh muncul pada slide peserta.
+
+STANDAR KONTEN
+- Jaga kesesuaian isi dengan substansi materi yang diberikan.
+- Pertahankan makna pesan inti, tetapi kemas dengan bahasa yang wajar dan komunikatif.
+- Jangan menampilkan label teknis seperti PK1/PK2/PK3 atau kode modul.
+- Jangan menambah angka, statistik, regulasi, atau klaim faktual tanpa sumber.
+- Contoh rekaan harus diberi konteks sebagai ilustrasi hipotetis.
+- Setiap slide memiliki satu fokus belajar yang jelas.
+- Gunakan visual yang menjelaskan, bukan memenuhi ruang.
+- Catatan narasi penyuluh dan alokasi waktu ditempatkan di speaker notes atau panduan, bukan di layar peserta.
+
+URUTAN SLIDE
+${slides.map(s=>`SLIDE ${String(s.no).padStart(2,"0")} — ${s.title}
+Fokus: ${s.purpose}
+Waktu: ${s.minutes} menit
+Konten untuk peserta:
+${s.onScreen}
+Arahan visual: ${s.visual}`).join("\n\n")}
+
+HASIL YANG DIMINTA
+Buat deck presentasi 16:9 dengan konsistensi tipografi, warna, ilustrasi, dan tata letak. Hindari mengulang semua poin dalam bentuk kartu yang seragam. Variasikan komposisi sesuai fungsi slide.`;
 }
 function makeFacilitatorGuide(c,slides){
- return `PANDUAN PENYULUH — EVIDENCE-BASED P4GN PRESENTATION\n${titleFor(c)}\nSasaran: ${c.segment}\nSituasi: ${c.situation}\nTujuan perubahan: ${c.objective}\nDurasi: ${c.duration}\n\nALUR FASILITASI PER SLIDE\n${slides.map(s=>`SLIDE ${s.no}: ${s.title} (${s.minutes} menit)\nTujuan: ${s.purpose}\nNarasi/arahan: ${s.notes}\nIsi yang perlu dijaga: ${s.onScreen}\nSumber: ${s.sourceLabel}`).join("\n\n")}\n\nPENGENDALIAN MUTU\n- Pastikan pesan kunci sama dengan bank materi.\n- Jangan menambah fakta tanpa sumber yang dapat diverifikasi.\n- Gunakan contoh hipotetis dan beri label sebagai ilustrasi.\n- Jaga partisipasi sukarela dan suasana tidak menghakimi.\n- Sesuaikan bahasa, bukan substansi.`;
+ const delivery=slides.map(s=>`SLIDE ${s.no}: ${s.title} (${s.minutes} menit)
+Tujuan: ${s.purpose}
+Narasi/arahan penyampaian: ${s.notes}
+Pesan/isi yang perlu disampaikan:
+${s.onScreen}`).join("\n\n");
+ const trace=[...new Set(slides.flatMap(s=>(s.content||[]).map(x=>`${x.module} — ${x.moduleTitle} — ${x.pk}`)))];
+ return `PANDUAN PENYULUH P4GN
+${titleFor(c)}
+Sasaran: ${c.segment}
+Situasi: ${c.situation}
+Tujuan pembelajaran: ${c.objective}
+Durasi: ${c.duration}
+
+ALUR DAN NARASI PER SLIDE
+${delivery}
+
+PENGENDALIAN MUTU PENYAMPAIAN
+- Gunakan bahasa yang sesuai dengan usia dan konteks peserta.
+- Jaga suasana aman, sukarela, dan tidak menghakimi.
+- Jangan meminta peserta membuka pengalaman pribadi yang sensitif di ruang publik.
+- Jangan menambah fakta, statistik, atau regulasi yang tidak terverifikasi.
+- Pesan dan makna materi sumber harus tetap konsisten.
+- Sesuaikan contoh dan aktivitas, bukan substansi.
+
+LAMPIRAN KETERLACAKAN INTERNAL — TIDAK UNTUK DITAMPILKAN KEPADA PESERTA
+${trace.length?trace.join("\n"):"Tidak ada poin materi sumber yang tercatat pada slide ini."}
+Catatan: daftar ini untuk pemeriksaan penyuluh; jangan ditempelkan ke visual presentasi.`;
 }
 async function buildSlideBlueprint(){
  if(!selected.length){$("promptOutput").textContent="Pilih modul terlebih dahulu.";return;}
@@ -170,7 +276,7 @@ async function buildSlideBlueprint(){
   lastFacilitatorGuide=makeFacilitatorGuide(c,slideBlueprint);
   $("promptOutput").textContent=master;
   $("slideCountLabel").textContent=slideBlueprint.length+" slide · "+total+" menit";
-  $("slideList").innerHTML=slideBlueprint.map(s=>`<article class="slide-card"><div class="slide-card-head"><span class="slide-number">SLIDE ${String(s.no).padStart(2,"0")} / ${s.total}</span><span class="tag">${s.minutes} menit · ${esc(s.kind==="evidence"?"Materi berbasis sumber":"Fasilitasi pembelajaran")}</span></div><h3>${esc(s.title)}</h3><div class="slide-meta">${esc(s.purpose)}</div><div class="slide-fields"><div class="slide-field"><b>TEKS / ISI SLIDE</b>${esc(s.onScreen)}</div><div class="slide-field"><b>CATATAN PENYULUH</b>${esc(s.notes)}</div></div><div class="slide-source"><b>Dasar:</b> ${esc(s.sourceLabel)}${s.content?.length?" · "+esc([...new Set(s.content.map(x=>x.module+"/"+x.pk))].join(", ")):""}</div><details><summary class="smalltext">Lihat prompt lengkap slide ini</summary><div class="slide-prompt">${esc(s.prompt)}</div></details><button class="btn primary small" data-copy-slide="${s.no}">Salin Prompt Slide ${String(s.no).padStart(2,"0")}</button></article>`).join("");
+  $("slideList").innerHTML=slideBlueprint.map(s=>`<article class="slide-card"><div class="slide-card-head"><span class="slide-number">SLIDE ${String(s.no).padStart(2,"0")} / ${s.total}</span><span class="tag">${s.minutes} menit · ${esc(s.kind==="evidence"?"Materi berbasis sumber":"Fasilitasi pembelajaran")}</span></div><h3>${esc(s.title)}</h3><div class="slide-meta">${esc(s.purpose)}</div><div class="slide-fields"><div class="slide-field"><b>TEKS / ISI SLIDE</b>${esc(s.onScreen)}</div><div class="slide-field"><b>CATATAN PENYULUH</b>${esc(s.notes)}</div></div><div class="slide-source"><b>Jenis slide:</b> ${esc(s.kind==="evidence"?"Materi pembelajaran":"Fasilitasi pembelajaran")}</div><details><summary class="smalltext">Lihat prompt lengkap slide ini</summary><div class="slide-prompt">${esc(s.prompt)}</div></details><button class="btn primary small" data-copy-slide="${s.no}">Salin Prompt Slide ${String(s.no).padStart(2,"0")}</button></article>`).join("");
  }catch(e){$("promptOutput").textContent="Gagal menyusun blueprint: "+e.message;}
  finally{$("makePrompt").disabled=false;$("makePrompt").textContent="Rancang Presentasi Berbasis Sumber";}
 }
