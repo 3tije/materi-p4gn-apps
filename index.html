@@ -48,7 +48,7 @@
 </div></section>
 </main><footer>P4GN Material Intelligence · Direktorat Informasi & Edukasi – BNN RI</footer>
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycbx3Rz59wrVXCYLOpPlLpwBC1Jhyz7QEKmnGiZ7OLDswzPwdG9-jnUdvx-jwqvdp0Xzzxw/exec";
+const API_URL="https://script.google.com/macros/s/AKfycbyUWRtuE2PgZg0r3mR1wBzkFGOWImBOrPKCVOs_Im5rA_r8YAyU3K9SGvlSoH6xLwRr0w/exec";
 let modules=[],selected=[],lastPlan="",lastGuide="",recommendationReady=false;
 const $=id=>document.getElementById(id);const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function jsonp(url){return new Promise((resolve,reject)=>{const cb="p4gn_cb_"+Math.random().toString(36).slice(2);let script;const timer=setTimeout(()=>{clean();reject(new Error("Permintaan melewati batas waktu."));},25000);function clean(){clearTimeout(timer);delete window[cb];if(script)script.remove();}window[cb]=d=>{clean();resolve(d)};script=document.createElement("script");script.src=url+(url.includes("?")?"&":"?")+"callback="+cb+"&_="+Date.now();script.onerror=()=>{clean();reject(new Error("Browser tidak dapat mengambil respons Apps Script."));};document.body.appendChild(script);});}
